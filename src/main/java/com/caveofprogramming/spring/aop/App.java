@@ -8,7 +8,10 @@ public class App {
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("com/caveofprogramming/spring/aop/bean.xml");
 
         Camera camera = (Camera)context.getBean("camera");
+
         camera.snap();
+        camera.snap(1000);
+        camera.snap("Prauge castle");
 
         context.close();
     }
