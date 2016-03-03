@@ -1,40 +1,47 @@
 package com.caveofprogramming.spring.aop;
 
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Component;
 
 @Aspect
 @Component
 public class Logger {
 
-    @Pointcut("execution(* com.caveofprogramming.spring.aop.Camera.*(..))")
+    @Pointcut("execution(* com.caveofprogramming.spring.aop.Camera.snap())")
     public void cameraSnap() {
     }
 
-    @Pointcut("execution(String com.caveofprogramming.spring.aop.Camera.snap(String))")
-    public void cameraSnapName() {
-    }
-
-//    @Pointcut("execution(* com.caveofprogramming.spring.aop.*.*(..))")
-    @Pointcut("execution(* *.*(..))")
-    public void cameraRelatedAction() {
-    }
-
     @Before("cameraSnap()")
-    public void aboutToTakePhoto() {
-        System.out.println("About to take a photo...");
+    public void beforeAdvice() {
+        System.out.println("Before advice ...");
     }
 
-    @Before("cameraSnapName()")
-    public void aboutToTakePhotoWithName() {
-        System.out.println("About to take a photo with name...");
+    @After("cameraSnap()")
+    public void afterAdvice() {
+        System.out.println("After advice ...");
     }
 
-    @Before("cameraRelatedAction()")
-    public void aboutToDoCameraRelatedAction() {
-        System.out.println("Doing something related to cameras...");
+    @AfterReturning("cameraSnap()")
+    public void afterReturningAdvice() {
+        System.out.println("After returning advice ...");
     }
 
+    @AfterThrowing("cameraSnap()")
+    public void afterThrowingAdvice() {
+        System.out.println("After throwing advice ...");
+    }
+
+    @Around("cameraSnap()")
+    public void aroundAdvice(ProceedingJoinPoint p) {
+        System.out.println("Around advice (before) ...");
+
+        try {
+            p.proceed();
+        } catch (Throwable e) {
+            System.out.println("In around advice: " + e.getMessage());
+        }
+
+        System.out.println("Around advice (after)");
+    }
 }
